@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f7f4">
+  <meta name="description" content="A student assignment planner prototype grounded in research on time management, procrastination, and study support.">
+  <title>Studywell — Student planner</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#overview" aria-label="Studywell home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none"><path d="M7 8.5c0-1.1.9-2 2-2h14c1.1 0 2 .9 2 2v16l-9-4.6-9 4.6v-16Z" stroke="currentColor" stroke-width="2"/><path d="m12 13 2.5 2.5L20 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="brand-copy"><strong>studywell</strong><small>YOUR STUDY SPACE</small></span>
+      </a>
+
+      <div class="nav-label">WORKSPACE</div>
+      <nav class="primary-nav" aria-label="Main navigation">
+        <button class="nav-link is-active" type="button" data-view="overview">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg>
+          Overview
+        </button>
+        <button class="nav-link" type="button" data-view="assignments">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-12a2 2 0 0 1 2-2Z"/><path d="M9 3.5h-2a2 2 0 0 0-2 2v12M10 10h6M10 14h6M10 18h4"/></svg>
+          Assignments
+          <span class="nav-count" id="nav-assignment-count">0</span>
+        </button>
+        <button class="nav-link" type="button" data-view="week">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="15" rx="2"/><path d="M7.5 3.5v4M16.5 3.5v4M3.5 10h17M8 14h2M14 14h2M8 17h2"/></svg>
+          Weekly plan
+        </button>
+        <button class="nav-link" type="button" data-view="focus">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8.5"/><path d="M12 8v5l3 2M9 2.5h6M12 2.5v2"/></svg>
+          Focus session
+        </button>
+        <button class="nav-link" type="button" data-view="reflection">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4.5h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-7l-5 3v-3H5a2 2 0 0 1-2-2v-10a2 2 0 0 1 2-2Z"/><path d="M8 9h8M8 13h5"/></svg>
+          Weekly reflection
+        </button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="sidebar-note">
+          <span class="note-spark" aria-hidden="true">✳</span>
+          <strong>Small steps add up.</strong>
+          <p>Plan a little, start early, and make room for real life.</p>
+        </div>
+        <div class="profile">
+          <div class="avatar" aria-hidden="true">S</div>
+          <div><strong>Student</strong><small>Personal workspace</small></div>
+          <span class="profile-dot" title="Saved in this browser"></span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <button class="mobile-menu" id="mobile-menu" type="button" aria-label="Open navigation" aria-expanded="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+        <div class="breadcrumb"><span>Workspace</span><span class="breadcrumb-separator">/</span><strong id="breadcrumb-current">Overview</strong></div>
+        <div class="topbar-actions">
+          <span class="today-label" id="today-label"></span>
+          <button class="icon-button notification-button" id="notification-button" type="button" aria-label="Open notifications" aria-expanded="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9ZM10 21h4"/></svg>
+            <span class="notification-dot" id="notification-dot" hidden></span>
+          </button>
+        </div>
+        <section class="notification-panel" id="notification-panel" aria-label="Notifications" hidden>
+          <div class="notification-heading"><strong>Updates</strong><span id="notification-count">0 new</span></div>
+          <div id="notification-list"></div>
+        </section>
+      </header>
+
+      <div class="content-wrap">
+        <section class="view is-visible" id="view-overview" aria-labelledby="page-title">
+          <div class="welcome-row">
+            <div>
+              <div class="eyebrow"><span class="eyebrow-dot"></span> YOUR PERSONAL STUDY PLANNER</div>
+              <h1 id="page-title">Make space for <span class="serif-accent">good work.</span></h1>
+              <p class="page-intro">A clear view of what’s next, with small steps to help you get there.</p>
+            </div>
+            <button class="button button-primary" type="button" data-action="new-assignment">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+              Add assignment
+            </button>
+          </div>
+
+          <div class="demo-banner">
+            <span class="demo-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 3.5 21 19H3l9-15.5Z"/><path d="M12 9v4M12 16.5h.01"/></svg>
+            </span>
+            <p><strong>Prototype workspace</strong> — Sample assignments are just examples. Your changes stay in this browser; this demo is not connected to your university LMS.</p>
+            <button class="text-button" type="button" id="reset-demo">Reset sample data</button>
+          </div>
+
+          <div class="summary-grid" aria-label="Study overview">
+            <article class="summary-card">
+              <div class="summary-top"><span>IN PROGRESS</span><span class="summary-icon icon-lilac"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4.5h14v16H5zM8 8h8M8 12h8M8 16h5"/></svg></span></div>
+              <div class="summary-value" id="stat-active">0</div>
+              <div class="summary-foot"><span class="stat-caption">assignments to plan</span><span class="stat-pill" id="stat-active-note">across courses</span></div>
+            </article>
+            <article class="summary-card">
+              <div class="summary-top"><span>DUE SOON</span><span class="summary-icon icon-peach"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3 2"/></svg></span></div>
+              <div class="summary-value" id="stat-due-soon">0</div>
+              <div class="summary-foot"><span class="stat-caption">within the next 3 days</span><span class="stat-pill pill-peach">keep an eye on these</span></div>
+            </article>
+            <article class="summary-card">
+              <div class="summary-top"><span>THIS WEEK</span><span class="summary-icon icon-green"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span></div>
+              <div class="summary-value" id="stat-completed">0</div>
+              <div class="summary-foot"><span class="stat-caption">milestones completed</span><span class="stat-pill pill-green" id="stat-completed-note">one step at a time</span></div>
+            </article>
+            <article class="summary-card">
+              <div class="summary-top"><span>FOCUS TIME</span><span class="summary-icon icon-blue"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8.5"/><path d="M12 8v5l3 2M9 2.5h6"/></svg></span></div>
+              <div class="summary-value" id="stat-focus">0<span class="value-unit">m</span></div>
+              <div class="summary-foot"><span class="stat-caption">recorded this week</span><span class="stat-pill pill-blue" id="stat-focus-note">make time to focus</span></div>
+            </article>
+          </div>
+
+          <div class="dashboard-grid">
+            <section class="panel assignment-panel">
+              <div class="panel-heading">
+                <div><div class="section-kicker">YOUR NEXT STEPS</div><h2>Up next</h2></div>
+                <button class="inline-link" type="button" data-view="assignments">All assignments <span aria-hidden="true">→</span></button>
+              </div>
+              <div class="next-list" id="next-list"></div>
+              <div class="empty-state" id="next-empty" hidden>
+                <span class="empty-illustration" aria-hidden="true">✳</span>
+                <strong>A clear desk is a good start.</strong>
+                <p>Add an assignment to begin making your plan.</p>
+                <button class="button button-secondary button-small" type="button" data-action="new-assignment">Add an assignment</button>
+              </div>
+            </section>
+
+            <section class="panel workload-panel">
+              <div class="panel-heading">
+                <div><div class="section-kicker">PLAN AROUND REAL LIFE</div><h2>Your week</h2></div>
+                <button class="round-link" type="button" data-view="week" aria-label="Open weekly plan">↗</button>
+              </div>
+              <div class="workload-total"><strong id="workload-hours">0</strong><span>hrs of recurring commitments</span></div>
+              <div class="workload-bar"><span id="workload-bar-fill"></span></div>
+              <div class="workload-caption"><span>Study time matters, too.</span><span id="commitment-count">0 commitments</span></div>
+              <div class="commitment-preview" id="commitment-preview"></div>
+              <button class="button button-secondary button-full" type="button" data-view="week">Plan my week <span aria-hidden="true">→</span></button>
+            </section>
+          </div>
+
+          <div id="deadline-alert" class="deadline-alert" hidden></div>
+
+          <details class="research-card" open>
+            <summary><span><span class="section-kicker">FROM STUDY FINDINGS TO STUDY SUPPORT</span><strong>Why these features?</strong></span><span class="research-toggle" aria-hidden="true">−</span></summary>
+            <div class="research-body">
+              <div class="research-metric"><strong>ρ = −.92</strong><span>Time management had the strongest association with assignment delay.</span></div>
+              <div class="research-metric"><strong>35.4%</strong><span>of students who named a late-submission reason mentioned competing commitments.</span></div>
+              <div class="research-metric"><strong>29.8%</strong><span>suggested planning, scheduling, or prioritizing as a solution.</span></div>
+              <div class="research-metric"><strong>17.4%</strong><span>mentioned forgetting a deadline or missing deadline information.</span></div>
+              <p class="research-disclaimer">Survey findings (N = 305) inform planning, workload, and reminder features. Correlations are group-level associations—not causes or individual risk predictions. This prototype uses transparent fixed rules, not machine learning.</p>
+            </div>
+          </details>
+
+          <section class="reflection-banner" id="reflection-prompt">
+            <div class="reflection-art" aria-hidden="true"><span></span><span></span><span></span></div>
+            <div class="reflection-copy">
+              <span class="section-kicker">A MOMENT TO CHECK IN</span>
+              <h2>What would make next week feel a little easier?</h2>
+              <p>A short weekly reflection can help you notice what’s working and choose one small adjustment.</p>
+            </div>
+            <button class="button button-light" type="button" data-view="reflection">Take a moment <span aria-hidden="true">→</span></button>
+          </section>
+          <div class="evidence-note"><span class="evidence-mark">i</span><p>Built around the study’s findings on time management, starting early, and competing commitments. These group-level associations guide the features; they are not a prediction of any individual student’s performance.</p></div>
+        </section>
+
+        <section class="view" id="view-assignments" aria-labelledby="assignments-title" hidden>
+          <div class="view-heading">
+            <div><div class="eyebrow"><span class="eyebrow-dot"></span> KEEP THE DETAILS TOGETHER</div><h1 id="assignments-title">Assignments</h1><p class="page-intro">See deadlines, break work into steps, and keep instructions close.</p></div>
+            <button class="button button-primary" type="button" data-action="new-assignment"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg> Add assignment</button>
+          </div>
+          <div class="sort-note"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10m-7 6h4"/></svg> Pending work is ordered by nearest deadline; your effort estimate breaks ties.</div>
+          <div class="panel table-panel">
+            <div class="assignment-table-head"><span>ASSIGNMENT</span><span>COURSE</span><span>DUE DATE</span><span>PROGRESS</span><span>EFFORT</span><span></span></div>
+            <div id="assignment-list"></div>
+            <div class="empty-state" id="assignment-empty" hidden><span class="empty-illustration" aria-hidden="true">✳</span><strong>No assignments yet</strong><p>Add your first assignment and its deadline.</p><button class="button button-secondary button-small" type="button" data-action="new-assignment">Add assignment</button></div>
+          </div>
+          <div class="helpful-note"><span class="helpful-icon">✳</span><div><strong>Start with a small next step.</strong><p>When you add a deadline, the planner suggests three evenly spaced milestones. Edit their names and dates, add your own steps, or remove suggestions to fit your plan.</p></div></div>
+        </section>
+
+        <section class="view" id="view-week" aria-labelledby="week-title" hidden>
+          <div class="view-heading">
+            <div><div class="eyebrow"><span class="eyebrow-dot"></span> MAKE ROOM FOR WHAT MATTERS</div><h1 id="week-title">Weekly plan</h1><p class="page-intro">Look at deadlines and recurring commitments side by side.</p></div>
+            <button class="button button-secondary" type="button" id="open-commitment-form"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg> Add commitment</button>
+          </div>
+          <div class="week-layout">
+            <section class="panel week-deadlines">
+              <div class="panel-heading"><div><div class="section-kicker">ACROSS ALL COURSES</div><h2>Upcoming deadlines</h2></div><span class="soft-label">Sorted by due date</span></div>
+              <div id="week-deadline-list"></div>
+              <div class="empty-inline" id="week-deadline-empty" hidden>No upcoming assignment deadlines. Add one whenever you’re ready.</div>
+            </section>
+            <section class="panel commitment-panel">
+              <div class="panel-heading"><div><div class="section-kicker">YOUR REGULAR COMMITMENTS</div><h2>Time outside class</h2></div></div>
+              <p class="panel-description">Add recurring work, family, or other commitments to keep your weekly plan realistic.</p>
+              <div id="commitment-list" class="commitment-list"></div>
+              <div class="commitment-total"><span>Total per week</span><strong id="weekly-commitment-total">0 hours</strong></div>
+              <form id="commitment-form" class="inline-form" hidden>
+                <label>Commitment name<input name="name" type="text" maxlength="60" placeholder="e.g. Part-time shift" required></label>
+                <div class="form-row">
+                  <label>Day<select name="day" required><option value="1">Monday</option><option value="2">Tuesday</option><option value="3">Wednesday</option><option value="4">Thursday</option><option value="5">Friday</option><option value="6">Saturday</option><option value="0">Sunday</option></select></label>
+                  <label>Hours per week<input name="hours" type="number" min="0.5" max="40" step="0.5" value="3" required></label>
+                </div>
+                <div class="form-actions"><button class="button button-secondary button-small" type="button" id="cancel-commitment">Cancel</button><button class="button button-primary button-small" type="submit">Save commitment</button></div>
+              </form>
+              <button class="button button-secondary button-full" type="button" id="add-commitment-button">Add a recurring commitment <span aria-hidden="true">+</span></button>
+            </section>
+          </div>
+          <div class="rule-note"><span class="rule-icon">i</span><p><strong>Deadline heads-up:</strong> the planner flags a busy window when three or more assignment deadlines fall within any three consecutive calendar days. It helps you notice a cluster; it does not grade or predict your performance.</p></div>
+        </section>
+
+        <section class="view" id="view-focus" aria-labelledby="focus-title" hidden>
+          <div class="view-heading">
+            <div><div class="eyebrow"><span class="eyebrow-dot"></span> ONE THING AT A TIME</div><h1 id="focus-title">Focus session</h1><p class="page-intro">Choose one task, set a gentle timer, and give it your attention.</p></div>
+          </div>
+          <div class="focus-layout">
+            <section class="focus-card">
+              <span class="section-kicker">YOUR FOCUS SPACE</span>
+              <label class="focus-task-label" for="focus-assignment">What would you like to work on?</label>
+              <select id="focus-assignment" class="focus-select"></select>
+              <div class="timer-ring" id="timer-ring">
+                <div class="timer-face"><span class="timer-time" id="timer-display">25:00</span><span class="timer-caption" id="timer-caption">READY WHEN YOU ARE</span></div>
+              </div>
+              <div class="duration-control"><span>SESSION LENGTH</span><div class="duration-options"><button type="button" class="duration-button is-selected" data-minutes="25">25 min</button><button type="button" class="duration-button" data-minutes="15">15 min</button><button type="button" class="duration-button" data-minutes="45">45 min</button></div></div>
+              <div class="focus-actions"><button class="button button-primary" id="timer-start" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 10 6-10 6V6Z"/></svg> Start focus</button><button class="button button-secondary" id="timer-reset" type="button" hidden>Reset</button></div>
+              <p class="focus-footnote">You can pause or stop whenever you need. Completed sessions are saved in this browser.</p>
+            </section>
+            <aside class="focus-side">
+              <section class="panel focus-tip"><span class="tip-spark">✳</span><div class="section-kicker">A SMALL SUGGESTION</div><h2>Make the first step tiny.</h2><p>Open the assignment, read the instructions, or write one rough sentence. Starting counts.</p></section>
+              <section class="panel focus-history"><div class="panel-heading"><div><div class="section-kicker">YOUR RECENT SESSIONS</div><h2>Focus log</h2></div><span class="summary-icon icon-blue"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8.5"/><path d="M12 8v5l3 2"/></svg></span></div><div id="focus-history-list"></div><div class="empty-inline" id="focus-history-empty" hidden>When you finish a focus session, it will show up here.</div></section>
+            </aside>
+          </div>
+        </section>
+
+        <section class="view" id="view-reflection" aria-labelledby="reflection-title" hidden>
+          <div class="view-heading">
+            <div><div class="eyebrow"><span class="eyebrow-dot"></span> NOTICE, LEARN, ADJUST</div><h1 id="reflection-title">Weekly reflection</h1><p class="page-intro">A few thoughtful notes can help you make a plan that fits you.</p></div>
+          </div>
+          <div class="reflection-layout">
+            <section class="panel reflection-form-panel">
+              <div class="reflection-date"><span class="reflection-date-icon">✳</span><div><strong id="reflection-week-label">This week</strong><span>A private note for your own planning</span></div></div>
+              <form id="reflection-form">
+                <label class="reflection-question">What went well this week?<span>Notice a small win, even if the week was busy.</span><textarea name="wentWell" rows="3" maxlength="500" placeholder="I made progress when…"></textarea></label>
+                <label class="reflection-question">What got in the way?<span>Think about time, workload, instructions, distractions, or something unexpected.</span><textarea name="gotInWay" rows="3" maxlength="500" placeholder="I found it difficult to…"></textarea></label>
+                <label class="reflection-question">What is one small adjustment for next week?<span>Choose something realistic and specific.</span><textarea name="nextStep" rows="3" maxlength="500" placeholder="Next week, I’ll try…"></textarea></label>
+                <div class="reflection-submit"><span id="reflection-saved" class="save-status"></span><button class="button button-primary" type="submit">Save reflection</button></div>
+              </form>
+            </section>
+            <aside class="reflection-aside">
+              <div class="reflection-quote"><span aria-hidden="true">“</span><p>You don’t need a perfect week to make progress. Just one next step that feels possible.</p></div>
+              <div class="panel reflection-evidence"><div class="section-kicker">WHY CHECK IN?</div><h2>Plan for your real week.</h2><p>Students often described competing work, family, and other commitments as a reason for delays. Reflection is a space to make an adjustment—not another performance score.</p><div class="evidence-stat"><strong>35.4%</strong><span>mentioned competing commitments in late-submission responses</span></div></div>
+            </aside>
+          </div>
+        </section>
+        <footer class="app-footer"><span>STUDYWELL · STUDENT MINI SYSTEM PROTOTYPE</span><span>English interface · Rule-based · No LMS connection</span></footer>
+      </div>
+    </main>
+  </div>
+
+  <dialog class="modal" id="assignment-dialog" aria-labelledby="assignment-dialog-title">
+    <form id="assignment-form" class="modal-form">
+      <div class="modal-heading"><div><div class="section-kicker">MAKE A PLAN THAT FITS</div><h2 id="assignment-dialog-title">Add an assignment</h2></div><button class="modal-close" type="button" data-close-dialog aria-label="Close">×</button></div>
+      <input name="id" type="hidden">
+      <label>Assignment name<input name="title" type="text" maxlength="100" placeholder="e.g. Research reflection" required></label>
+      <div class="form-row"><label>Course<input name="course" type="text" maxlength="60" placeholder="e.g. Research Methods" required></label><label>Your effort estimate<select name="effort" required><option value="1">1 hour</option><option value="2">2 hours</option><option value="3">3 hours</option><option value="4">4 hours</option><option value="5">5 hours</option><option value="6">6 hours</option><option value="8">8 hours</option><option value="10">10+ hours</option></select></label></div>
+      <div class="form-row"><label>Released on<input name="releaseDate" type="date" required></label><label>Due date<input name="dueDate" type="date" required></label></div>
+      <label>Instructions and deliverables <span class="label-hint">Add one item per line; each becomes a checklist item.</span><textarea name="instructions" rows="4" maxlength="1200" placeholder="Read the assignment brief&#10;Draft the main sections&#10;Check references before submitting"></textarea></label>
+      <label>Contact link <span class="label-hint">Optional email address or https:// link to ask for help.</span><input name="contact" type="text" maxlength="200" placeholder="lecturer@example.edu"></label>
+      <div class="milestone-hint"><span>✳</span><p>We’ll suggest milestones at 25%, 50%, and 75% of the time before your deadline. You can adjust them later.</p></div>
+      <p class="form-error" id="assignment-error" role="alert" hidden></p>
+      <div class="modal-actions"><button class="button button-secondary" type="button" data-close-dialog>Cancel</button><button class="button button-primary" type="submit">Save assignment</button></div>
+    </form>
+  </dialog>
+
+  <dialog class="modal detail-modal" id="detail-dialog" aria-labelledby="detail-title">
+    <div class="detail-content" id="detail-content"></div>
+  </dialog>
+
+  <div class="toast-region" id="toast-region" aria-live="polite" aria-atomic="true"></div>
+</body>
+</html>
